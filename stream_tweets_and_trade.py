@@ -189,7 +189,10 @@ class StreamListener(tweepy.StreamListener):
         """Create the trade order on Binance.us."""
 
         prices = self.binance_trader.check_balances()
-        amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        if 'BNB' in prices.keys():
+            amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        else:
+            amount_of_bnb_usd = 0
         amount_of_usd = float(prices['USD']['amount'])
 
         # create buy orders
@@ -197,7 +200,7 @@ class StreamListener(tweepy.StreamListener):
             trans_fee = self.amount_to_trade_usd * 0.001
             if (amount_of_usd < self.amount_to_trade_usd or
                    (amount_of_usd - self.amount_to_trade_usd < trans_fee and amount_of_bnb_usd < trans_fee)):
-                msg = 'Not enough USD to buy.'
+                msg = 'Not enough USD or BNB to buy.'
                 msg += ' Balance: {} USD,'.format(prices['USD']['amount'])
                 msg += ' Buy request: {} USD.'.format(self.amount_to_trade_usd)
                 print(msg)

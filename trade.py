@@ -35,7 +35,10 @@ class BinanceTrading():
                          type='MARKET'):
         prices = self.check_balances()
         amount_of_usd = float(prices['USD']['amount'])
-        amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        if 'BNB' in prices.keys():
+            amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        else:
+            amount_of_bnb_usd = 0
         trans_fee = quoteOrderQty * 0.001
         if (amount_of_usd < quoteOrderQty or
                    (amount_of_usd - quoteOrderQty < trans_fee and amount_of_bnb_usd < trans_fee)):
@@ -62,7 +65,10 @@ class BinanceTrading():
         prices = self.check_balances()
         price_per_ticker_coin = float(
             prices[symbol[:-3]]['price per coin (USD)'])
-        amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        if 'BNB' in prices.keys():
+            amount_of_bnb_usd = float(prices['BNB']['USD invested'])
+        else:
+            amount_of_bnb_usd = 0
         amount_of_usd = float(prices['USD']['amount'])
         amount_to_sell = price_per_ticker_coin * quantity
 
